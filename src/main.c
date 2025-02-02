@@ -42,7 +42,7 @@ char **get_map()
         map[0] = "1111111111111111111";
         map[1] = "1000000000000000001";
         map[2] = "1000000000000000001";
-        map[3] = "1000000000000000001";
+        map[3] = "1000000110000000001";
         map[4] = "1000000100000000001";
         map[5] = "1000000000000000001";
         map[6] = "1000000100000000001";
@@ -70,20 +70,32 @@ bool touch(float px, float py, t_cubed *cubed)
                 return true;
         return false;
 }
-
+float distance(float x, float y)
+{
+        return sqrt(x * x + y * y);
+}
 void draw_line(t_player *player, t_cubed *cubed, float start_x, int i)
 {
         float cos_angle = cos(start_x);
         float sin_angle = sin(start_x);
         float ray_x = player->x;
         float ray_y = player->y;
-
-        (void)i;
+        (void)start_x;
         while (!touch(ray_x, ray_y, cubed))
         {
-                put_pixel(ray_x, ray_y, 0xf0A1F0, cubed);
+                // put_pixel(ray_x, ray_y, 0xf0A1F0, cubed);
                 ray_x += cos_angle;
                 ray_y += sin_angle;
+        }
+        float dist = distance(ray_x - player->x, ray_y - player->y);
+        float height = (BLOCK_SIZE / dist) * (WIDTH / 2);
+        int start_y = (HEIGHT - height) / 2;
+        int end = start_y + height;
+
+        while (start_y < end)
+        {
+                put_pixel(i, start_y, 0x00ff00, cubed);
+                start_y++;
         }
 }
 int draw_loop(t_cubed *cubed)
@@ -91,8 +103,8 @@ int draw_loop(t_cubed *cubed)
         t_player *player = &cubed->player;
         move_player(player);
         clear_image(cubed);
-        draw_square(player->x, player->y, PLAYER_SIZE, 0xAA00AA, cubed);
-        draw_map(cubed);
+        // draw_square(player->x, player->y, PLAYER_SIZE, 0xAA00AA, cubed);
+        // draw_map(cubed);
 
         float fraction = PI / 3 / WIDTH;
         float start_x = player->angle - PI / 6;

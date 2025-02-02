@@ -8,22 +8,29 @@
 #include <math.h>
 #define WIDTH 1280
 #define HEIGHT 720
-
+#define BLOCK_SIZE 64
+#define PLAYER_SIZE 10
+#define SPEED 1
 #define W 119
 #define A 97
 #define S 115
 #define D 100
-
+#define LEFT 65361
+#define RIGHT 65363
 #define PI 3.1415
 typedef struct s_player
 {
         float x;
         float y;
+        float angle;
 
         bool key_up;
         bool key_down;
         bool key_left;
         bool key_right;
+
+        bool left_rotate;
+        bool right_rotate;
 } t_player;
 
 typedef struct s_cubed

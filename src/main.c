@@ -27,7 +27,7 @@ void draw_map(t_cubed *cubed)
         for (size_t y = 0; map[y]; y++)
                 for (size_t x = 0; map[y][x]; x++)
                         if (map[y][x] == '1')
-                                draw_square(x * 64, y * 64, 64, color, cubed);
+                                draw_square(x * 64, y * 64, BLOCK_SIZE, color, cubed);
 }
 
 void clear_image(t_cubed *cubed)
@@ -43,9 +43,9 @@ char **get_map()
         map[1] = "1000000000000000001";
         map[2] = "1000000000000000001";
         map[3] = "1000000000000000001";
-        map[4] = "1000000000000000001";
+        map[4] = "1000000100000000001";
         map[5] = "1000000000000000001";
-        map[6] = "1000000000000000001";
+        map[6] = "1000000100000000001";
         map[7] = "1000000000000000001";
         map[8] = "1000000000000000001";
         map[9] = "1111111111111111111";
@@ -62,13 +62,47 @@ void init_cubed(t_cubed *cubed)
         cubed->data = mlx_get_data_addr(cubed->img, &cubed->bpp, &cubed->size_line, &cubed->endian);
         mlx_put_image_to_window(cubed->mlx, cubed->win, cubed->img, 0, 0);
 }
+bool touch(float px, float py, t_cubed *cubed)
+{
+        int x = px / BLOCK_SIZE;
+        int y = py / BLOCK_SIZE;
+        if (cubed->map[y][x] == '1')
+                return true;
+        return false;
+}
+
+void draw_line(t_player *player, t_cubed *cubed, float start_x, int i)
+{
+        float cos_angle = cos(start_x);
+        float sin_angle = sin(start_x);
+        float ray_x = player->x;
+        float ray_y = player->y;
+
+        (void)i;
+        while (!touch(ray_x, ray_y, cubed))
+        {
+                put_pixel(ray_x, ray_y, 0xf0A1F0, cubed);
+                ray_x += cos_angle;
+                ray_y += sin_angle;
+        }
+}
 int draw_loop(t_cubed *cubed)
 {
         t_player *player = &cubed->player;
         move_player(player);
         clear_image(cubed);
-        draw_square(player->x, player->y, 20, 0xAA00AA, cubed);
+        draw_square(player->x, player->y, PLAYER_SIZE, 0xAA00AA, cubed);
         draw_map(cubed);
+
+        float fraction = PI / 3 / WIDTH;
+        float start_x = player->angle - PI / 6;
+        int i = 0;
+        while (i < WIDTH)
+        {
+                draw_line(player, cubed, start_x, i);
+                start_x += fraction;
+                i++;
+        }
         mlx_put_image_to_window(cubed->mlx, cubed->win, cubed->img, 0, 0);
         return (1);
 }

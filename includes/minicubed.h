@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
+#include <X11/keysym.h>
 #define WIDTH 1280
 #define HEIGHT 720
 #define BLOCK_SIZE 64

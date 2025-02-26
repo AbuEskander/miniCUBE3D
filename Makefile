@@ -4,8 +4,8 @@ OBJ_DIR = build
 CC = cc
 NAME = miniCUBED
 MINIX = minilibx-linux
-LIBS = -L./minilibx-linux/ -lmlx_Linux -lmlx -lXext -lX11 -lm
-CFLAGS = -Wall -Werror -Wextra -I./includes -I./minilibx-linux/ $(LIBS)
+LIBS = -L./minilibx-linux/ -lmlx_Linux 
+CFLAGS = -Wall -Werror -Wextra -I./includes -I./minilibx-linux/ -lmlx -lXext -lX11 -lm
 SRCSDIR=$(addprefix src/,$(SRCS))
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCSDIR))
 LIBFT = libft
@@ -14,7 +14,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@make -C $(MINIX)
-	$(CC) $(OBJS) $(CFLAGS)  -o $(NAME)
+	$(CC) $(OBJS) $(CFLAGS)   -o $(NAME)
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@

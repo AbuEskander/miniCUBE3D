@@ -118,6 +118,15 @@ int draw_loop(t_cubed *cubed)
         mlx_put_image_to_window(cubed->mlx, cubed->win, cubed->img, 0, 0);
         return (1);
 }
+int     keyhandler(int keycode,void *param)
+{
+        (void)param;
+        if(keycode == XK_Escape)
+        {
+                exit(1);
+        }
+        return (1);
+}
 int main()
 {
         t_cubed cubed;
@@ -126,6 +135,7 @@ int main()
         mlx_hook(cubed.win, 2, 1L << 0, key_press, &cubed.player);
         mlx_hook(cubed.win, 3, 1L << 1, key_release, &cubed.player);
 
+        mlx_key_hook(cubed.win,keyhandler,&cubed);
         mlx_loop_hook(cubed.mlx, draw_loop, &cubed);
         mlx_loop(cubed.mlx);
 }
